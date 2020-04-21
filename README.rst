@@ -3,7 +3,7 @@ Style transfer VAE
 ==================
 
 .. image:: https://img.shields.io/pypi/v/stvae?color=green
-   :target: https://pypi.org/project/stVAE/
+    :target: https://pypi.org/project/stVAE/
 
 .. image:: https://travis-ci.org/NRshka/stvae.svg?branch=master
     :target: https://travis-ci.org/NRshka/stvae
