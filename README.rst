@@ -1,9 +1,12 @@
-.. |PyPI| image:: https://img.shields.io/pypi/v/stvae?color=green&style=plastic
-   :target: https://pypi.org/project/stVAE/
-
 ==================
 Style transfer VAE
 ==================
+
+.. image:: https://img.shields.io/pypi/v/stvae?color=green&style=plastic
+   :target: https://pypi.org/project/stVAE/
+
+.. image:: https://travis-ci.org/NRshka/stvae.svg?branch=master
+    :target: https://travis-ci.org/NRshka/stvae
 
 The official pytorch implementation of "*Style transfer with variational autoencoders is a promising approach to RNA-Seq data harmonization and analysis*".
 The package contains a code for training and testing the model, as well as a code for working with different types of datasets.
