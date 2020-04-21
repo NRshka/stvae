@@ -2,6 +2,7 @@ from pathlib import Path
 import sys
 from ignite.engine import Engine, Events
 from ignite.metrics import Metric
+from ignite.contrib.handlers import ProgressBar
 from numpy import inf
 from tensorboardX import SummaryWriter
 import torch
@@ -94,8 +95,10 @@ def train(dataloader_train, dataloader_val, cfg,
             update_class_val = Validator(model, disc, cfg, cuda=cfg.use_cuda)
 
 
-        trainer = Engine(update_class_train)
         validator = Engine(update_class_val)
+        trainer = Engine(update_class_train)
+        progress_bar = ProgressBar()
+        progress_bar.attach(trainer)
 
         trainer.iteration = 0
 
