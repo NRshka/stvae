@@ -1,0 +1,15 @@
+dataclasses
+torch
+pytorch-ignite
+dataclasses
+numpy
+pandas
+typing
+tensorboardX
+scikit-learn
+scipy
+scvi
+scanpy
+ranger
+scgen
+ntpath
