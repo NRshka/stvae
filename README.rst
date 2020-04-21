@@ -8,6 +8,7 @@ The package contains a code for training and testing the model, as well as a cod
 **Installation**
 
 To install the latest version from PyPI, use:
+..
   pip install stvae
 
 **Benchmarks**
@@ -15,6 +16,8 @@ To install the latest version from PyPI, use:
 The original code containing code with testing several models can be found .. _scVI: https://github.com/NRshka/stvae-source
 
 **Example**
+
+..
   ds = stvae.datasets.MouseDataset()
   cfg = stvae.Config()
   train, test, classif = ds.split(0.15, True, 0.15)
