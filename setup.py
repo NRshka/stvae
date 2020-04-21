@@ -15,9 +15,10 @@ authors = [
     "N. Russkikh",
     "A. Makarov",
     "D. Antonets",
-    "D. Shtokalo"
+    "D. Shtokalo",
+    "Y. Vyatkin"
 ]
-print(readme)
+
 setup(
     author = authors,
     author_email = "makarov.alxr@yandex.ru",
@@ -40,6 +41,6 @@ setup(
     license = "MIT license",
     packages = find_packages(),
     setup_requires = setup_requirements,
-    version = "0.2",
+    version = "0.2.2",
     url = "https://github.com/NRshka/stvae/source"
 )
