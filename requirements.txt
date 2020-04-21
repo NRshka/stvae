@@ -1,6 +1,6 @@
 dataclasses
 torch
-pytorch-ignite
+pytorch-ignite==0.3.0
 dataclasses
 numpy
 pandas
