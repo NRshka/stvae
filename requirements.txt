@@ -9,6 +9,6 @@ tensorboardX
 scikit-learn
 scipy
 scvi
-scanpy
+scanpy==1.4.6
 ranger
 scgen
