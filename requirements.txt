@@ -12,4 +12,3 @@ scvi
 scanpy
 ranger
 scgen
-ntpath
