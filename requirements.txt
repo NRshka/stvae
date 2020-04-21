@@ -11,4 +11,4 @@ scipy
 scvi
 scanpy
 ranger
-scgen
+scgen==1.1.4
