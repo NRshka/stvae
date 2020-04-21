@@ -1,3 +1,6 @@
+.. |PyPI| image:: https://img.shields.io/pypi/v/stvae?color=green&style=plastic
+   :target: https://pypi.org/project/stVAE/
+
 ==================
 Style transfer VAE
 ==================
