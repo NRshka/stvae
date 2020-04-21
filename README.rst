@@ -8,22 +8,23 @@ The package contains a code for training and testing the model, as well as a cod
 **Installation**
 
 To install the latest version from PyPI, use:
-..
-  pip install stvae
+>>> pip install stvae
 
 **Benchmarks**
 
-The original code containing code with testing several models can be found .. _scVI: https://github.com/NRshka/stvae-source
+The original code containing code with testing several models can be found here_.
+
+.. _here: https://github.com/NRshka/stvae-source
 
 **Example**
 
-..
-  ds = stvae.datasets.MouseDataset()
-  cfg = stvae.Config()
-  train, test, classif = ds.split(0.15, True, 0.15)
-  cfg.count_classes = ds.n_labels
-  cfg.count_classes = ds.n_batches
-  cfg.input_dim = ds.nb_genes
-  model = stvae.stVAE(cfg)
-  model.train(train, None)
-  d = model.test(test, classif)
+
+    ds = stvae.datasets.MouseDataset()
+    cfg = stvae.Config()
+    train, test, classif = ds.split(0.15, True, 0.15)
+    cfg.count_classes = ds.n_labels
+    cfg.count_classes = ds.n_batches
+    cfg.input_dim = ds.nb_genes
+    model = stvae.stVAE(cfg)
+    model.train(train, None)
+    d = model.test(test, classif)
