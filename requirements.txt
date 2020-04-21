@@ -7,7 +7,7 @@ pandas
 typing
 tensorboardX
 scikit-learn
-scipy
+scipy==1.4.1
 scvi
 scanpy
 ranger
