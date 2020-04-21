@@ -68,7 +68,8 @@ class CsvDataset:
             train_labels,
             test_labels,
         ) = train_test_split(
-            self.X, self.batch_indices, self.labels, test_size=test_size
+            self.X, self.batch_indices, self.labels, test_size=test_size,
+            stratify=self.batch_indices
         )
 
         if for_classifiers:
@@ -80,7 +81,8 @@ class CsvDataset:
                 train_labels,
                 class_labels,
             ) = train_test_split(
-                train_expression, train_batches, train_labels, test_size=classif_size
+                train_expression, train_batches, train_labels, test_size=classif_size,
+                stratify=train_batches
             )
             return (
                 (train_expression, train_batches, train_labels),
@@ -101,9 +103,15 @@ class ScratchDataset(CsvDataset):
         self.X = expression
         self.nb_genes = self.X.shape[1]
         self.labels = labels
-        self.n_labels = np.unique(labels).shape[0]
+        if len(labels.shape) == 1:
+            self.n_labels = np.unique(labels).shape[0]
+        elif len(labels.shape) == 2:
+            self.n_labels = labels.shape[1]
         self.batch_indices = batch_indices
-        self.n_batches = np.unique(batch_indices).shape[0]
+        if len(batch_indices.shape) == 1:
+            self.n_batches = np.unique(batch_indices).shape[0]
+        elif len(batch_indices.shape) == 2:
+            self.n_batches = batch_indices.shape[1]
 
     def __len__(self):
         return self.X.shape[0]
@@ -203,7 +211,7 @@ class MouseDataset(CsvDataset):
                 verbose,
             )
 
-        expression_df = pd.read_csv(directory / expression_filename, index_col=0)
+        expression_df = pd.read_csv(expression_filename, index_col=0)
 
         labels_df = pd.read_csv(labels_filename, index_col=0)
         assert all(expression_df.index == labels_df.index)
@@ -216,10 +224,10 @@ class MouseDataset(CsvDataset):
         self.filter(*dfs)
 
     def download(self, url: str, filename: Union[Path, str], verbose: bool) -> None:
-        response = requests.get(url, allow_redirects=True, stream=verbose)
-        length = response.headers.get("content-length")
         if verbose:
             print(f"Downloading {filename_from_path(filename)}")
+        response = requests.get(url, allow_redirects=True, stream=verbose)
+        length = response.headers.get("content-length")
         with open(filename, "wb") as file:
             if not length and verbose:
                 file.write(response.content)

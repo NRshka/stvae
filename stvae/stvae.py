@@ -106,7 +106,8 @@ class stVAE:
             valid_data = _cast_data(validation_data, self.cfg, "train", "validation")
         train(train_data, valid_data, self.cfg, self.model, self.disc)
 
-    def train_classifiers(self, train_data):
+    def train_classifiers(self, train_data) -> None:
+        train_data = _cast_data(train_data, self.cfg, "train")
         self.celltype_clf, self.form_clf = train_classifiers(
             self.cfg, train_data, self.cfg.count_labels, self.cfg.count_classes
         )

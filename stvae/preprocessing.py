@@ -1,9 +1,10 @@
-from typing import Optional, SIzed
+from typing import Optional, Sized, Union
 import numpy as np
 import scanpy as sc
+from sklearn.preprocessing import OneHotEncoder
 from scvi.dataset import GeneExpressionDataset
 
-from datasets import ScratchDataset
+from .datasets import ScratchDataset
 from .utils import make_anndata, scvi_anndata
 
 
@@ -85,3 +86,42 @@ def predefined_preprocessing(
         sc.pp.log1p(data)
 
     return data
+
+def get_high_variance_genes(
+    dataset,
+    genes: Optional[Union[list, tuple, np.ndarray]] = None,
+    n_genes: Optional[int] = None,
+    min_disp: Optional[float] = None,
+    max_disp: Optional[float] = None,
+    argmax: bool = True,
+) -> tuple:
+    assert n_genes or min_disp or max_disp, "Choose smth"
+
+    expression = dataset.X
+    class_ohe = dataset.batch_indices
+    cell_type = dataset.labels
+    genes_data = None
+    if not genes is None:
+        genes_data = [("genes", genes)]
+        if not isinstance(genes, np.ndarray):
+            genes = np.array(genes)
+    if argmax:
+        class_ohe = class_ohe.argmax(1)
+        cell_type = cell_type.argmax(1)
+    anndata = make_anndata(
+        expression, class_ohe, "condition", cell_type, "cell_type", genes_data
+    )
+    sc.pp.filter_genes_dispersion(
+        anndata, n_top_genes=n_genes, min_disp=min_disp, max_disp=max_disp
+    )
+
+    expr = anndata.X
+    expr = expr if isinstance(expr, np.ndarray) else np.array(expr)
+    ohe = np.array(anndata.obs["condition"].tolist())
+    ohe = OneHotEncoder(sparse=False).fit_transform(ohe.reshape(-1, 1))
+    celltype = np.array(anndata.obs["cell_type"])
+    celltype = OneHotEncoder(sparse=False).fit_transform(celltype.reshape(-1, 1))
+    if not genes is None:
+        return expr, ohe, celltype, anndata.var["genes"]
+
+    return ScratchDataset(expr, ohe, celltype)

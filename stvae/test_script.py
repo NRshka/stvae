@@ -57,7 +57,8 @@ def train_classifiers(cfg, annot_dataloader, count_celltypes, count_classes,
         'epoch':             []
     }
     for epoch in range(cfg.classifier_epochs):
-        print(f'\rTraining classifier [{epoch+1}/{cfg.classifier_epochs}]', end='')
+        if cfg.verbose == 'all':
+            print(f'\rTraining classifier [{epoch+1}/{cfg.classifier_epochs}]', end='')
         celltype_clf.train()
         form_clf.train()
         metrics['epoch'].append(epoch + 1)
