@@ -1,7 +1,4 @@
-import os
 import stvae
-
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 ds = stvae.datasets.MouseDataset()
 cfg = stvae.Config()
@@ -12,6 +9,7 @@ cfg.count_classes = ds.n_batches
 cfg.input_dim = ds.nb_genes
 cfg.epochs = 1
 cfg.classifier_epochs = 1
+cfg.use_cuda = False
 model = stvae.stVAE(cfg)
 model.train(train, None)
 
