@@ -1,4 +1,7 @@
+git:
+  quiet: true
 language: python
 python: 3.6
 script:
+    python setup.py install
     find ./tests -type f | xargs python3
