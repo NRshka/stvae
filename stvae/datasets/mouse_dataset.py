@@ -222,7 +222,7 @@ class MouseDataset(CsvDataset):
             print(f"Downloading {filename_from_path(filename)}")
         with open(filename, "wb") as file:
             if not length and verbose:
-                file.write(data.content)
+                file.write(response.content)
             else:
                 dl = 0
                 length = int(length)
