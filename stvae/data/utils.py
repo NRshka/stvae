@@ -20,10 +20,10 @@ def create_random_classes(batch_size: int, num_classes: int):
     return Tensor(res_np)
 
 
-def add_noise(expr: ndarray, beta: float = 1.0):
+def add_noise(expr: ndarray, beta: float = 1.0, use_cuda: bool = False):
     #TODO doc-string
     rand_values = randn(expr.shape)
-    if cuda.is_available():
+    if use_cuda and cuda.is_available():
         rand_values = rand_values.cuda()
     res = expr + rand_values * beta
 

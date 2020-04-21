@@ -39,10 +39,11 @@ class VAEUpdater:
         self.form_consistency_loss = CrossEntropyLoss()
 
         self.device = device
-        #self.cuda = cuda
+        self.cuda = False
+        self.device = torch_device('cpu')
         if cfg.use_cuda:
             self.cuda = True
-            self.device = torch_device('cuda:0')
+            self.device = torch_device('cuda')
 
     def __call__(self, engine, batch):
         self.noise_beta = self.noise_beta * self.cfg.decay_beta
@@ -71,7 +72,6 @@ class VAEUpdater:
                 x1 = mmd_values[batch_indices == feature1]
                 x2 = mmd_values[batch_indices == feature2]
                 min_len = min(x1.shape[0], x2.shape[0])
-                #pdb.set_trace()
                 av_mmd_loss += mmd_criterion(x1[:min_len], x2[:min_len], self.cuda, mu=self.cfg.kernel_mu, sigma=1e-6).mean()
             av_mmd_loss /= count_comb
 
@@ -104,7 +104,7 @@ class VAEUpdater:
             #adv_loss_g = discrim_loss(latent_discrim(latents), ohe.argmax(1))
             #loss-=20.*adv_loss_g
 
-            noisy_latents = add_noise(latents, self.noise_beta)
+            noisy_latents = add_noise(latents, self.noise_beta, self.cuda)
             #noisy_latents = add_noise(next_layers_out)
             discrim_preds = self.latent_discrim(noisy_latents)
             #shannon entropy
