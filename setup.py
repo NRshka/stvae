@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 from os.path import join, dirname, basename
 
 
-with open('README.md', 'r') as readme_file:
-    readme = readme_file.read()
+with open('README.rst', 'r') as file:
+    readme = file.read()
 
 with open('requirements.txt', 'r') as req_file:
     requirements = req_file.read().split('\n')
@@ -17,7 +17,7 @@ authors = [
     "D. Antonets",
     "D. Shtokalo"
 ]
-
+print(readme)
 setup(
     author = authors,
     author_email = "makarov.alxr@yandex.ru",
@@ -35,10 +35,11 @@ setup(
     description = "Style transfer variational autoencoder",
     name = "stVAE",
     long_description = readme,
+    long_description_content_type = 'text/x-rst',
     python_requires=">=3.6",
     license = "MIT license",
     packages = find_packages(),
     setup_requires = setup_requirements,
-    version = "0.1",
+    version = "0.2",
     url = "https://github.com/NRshka/stvae/source"
 )
