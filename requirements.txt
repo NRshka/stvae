@@ -2,7 +2,7 @@ dataclasses
 torch
 pytorch-ignite
 dataclasses
-numpy
+numpy==1.18.3
 pandas
 typing
 tensorboardX
