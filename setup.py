@@ -2,6 +2,12 @@ from setuptools import setup, find_packages
 from os.path import join, dirname, basename
 
 
+def parse_requirements(filename):
+    """ load requirements from a pip requirements file """
+    lineiter = (line.strip() for line in open(filename))
+    return [line for line in lineiter if line and not line.startswith("#")]
+
+
 with open('README.rst', 'r') as file:
     readme = file.read()
 
@@ -41,6 +47,7 @@ setup(
     license = "MIT license",
     packages = find_packages(),
     setup_requires = setup_requirements,
-    version = "0.2.2",
-    url = "https://github.com/NRshka/stvae/source"
+    install_requires = parse_requirements('./requirements.txt'),
+    version = "0.2.3",
+    url = "https://github.com/NRshka/stvae/source",
 )
