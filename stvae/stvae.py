@@ -1,5 +1,6 @@
 from typing import Sized, Callable, Union, Optional
 from warnings import warn
+import numpy as np
 from numpy import array as Array
 from torch import Tensor
 from torch.utils.data import TensorDataset
@@ -13,7 +14,7 @@ from .train_script import train
 from .test_script import test, train_classifiers
 
 
-def _cast_data(data, cfg: Config, mode: str, datatype: str = ""):
+def _cast_data(data, cfg: Config, mode: str, datatype: str = "", preproc: bool = True):
     assert mode in ("train", "test")
 
     kwargs = {"batch_size": cfg.batch_size}  # for torch DataLoader
@@ -21,7 +22,10 @@ def _cast_data(data, cfg: Config, mode: str, datatype: str = ""):
         kwargs["num_workers"] = cfg.num_workers
 
     if isinstance(data, (CsvDataset)):  # TODO scvi.dataset.GeneExpression
-        tensors = (Tensor(data.X), Tensor(data.batch_indices))
+        expression = data.X
+        if preproc:
+            expression = np.log(expression + 1.)
+        tensors = (Tensor(expression), Tensor(data.batch_indices))
         if mode == "test":
             tensors += (Tensor(data.labels),)
         ds = TensorDataset(*tensors)
@@ -41,7 +45,9 @@ def _cast_data(data, cfg: Config, mode: str, datatype: str = ""):
         '''
 
         n = 3 if mode == "test" else 2
-        tensors = (Tensor(data[i]) for i in range(n))
+        tensors = [Tensor(data[i]) for i in range(n)]
+        if preproc:
+            tensors[0] = np.log(tensors[0] + 1.)
         ds = TensorDataset(*tensors)
 
         return TorchDataLoader(ds, **kwargs)
@@ -52,6 +58,9 @@ def _cast_data(data, cfg: Config, mode: str, datatype: str = ""):
             expression = data["X"]
         else:
             raise KeyError(f"{datatype} data must contains 'X' or 'expression' key")
+
+        if preproc:
+            expression = np.log(expression + 1.)
 
         try:
             batches = data["batch_indices"]
@@ -65,7 +74,7 @@ def _cast_data(data, cfg: Config, mode: str, datatype: str = ""):
             ds, batch_size=cfg.batch_size, num_workers=cfg.num_workers
         )
     elif isinstance(data, AnnData):
-        raise NotImplementedError
+        raise NotImplementedError()
     elif isinstance(data, TorchDataLoader):
         return data
     elif isinstance(data, TensorDataset):
@@ -99,8 +108,9 @@ class stVAE:
         train_data: Union[Sized, AnnData],
         validation_data: Optional[Union[Sized, AnnData]],
         random_seed=0,
+        preprocess: bool = True
     ) -> None:
-        train_data = _cast_data(train_data, self.cfg, "train")
+        train_data = _cast_data(train_data, self.cfg, "train", preproc=preprocess)
         valid_data = None
         if not validation_data is None:
             valid_data = _cast_data(validation_data, self.cfg, "train", "validation")
@@ -118,9 +128,10 @@ class stVAE:
         classifier_train_data=None,
         custom_metrics=[],
         overwrite: Union[bool] = False,
+        preprocess: bool = True
     ) -> dict:
         if not classifier_train_data is None:
-            classifier_train_data = _cast_data(classifier_train_data, self.cfg, "test")
+            classifier_train_data = _cast_data(classifier_train_data, self.cfg, "test", preprocess)
         test_data = _cast_data(test_data, self.cfg, "test")
         expression = test_data.dataset.tensors[0].numpy()
         batch_indices = test_data.dataset.tensors[1].numpy()
