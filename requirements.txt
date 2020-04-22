@@ -1,13 +1,12 @@
 dataclasses==0.7
 torch
 pytorch-ignite==0.3.0
-dataclasses==0.7
 numpy
-pandas
+pandas==1.0.3
 typing
-tensorboardX
+tensorboardX==2.0
 scikit-learn
-scipy
+scipy==1.4.1
 scvi
 scanpy
 torch-optimizer
