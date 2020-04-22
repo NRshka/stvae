@@ -12,4 +12,4 @@ scvi
 scanpy
 torch-optimizer
 scgen
-requests
+requests==2.23.0
