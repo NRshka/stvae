@@ -4,7 +4,7 @@ pytorch-ignite
 dataclasses==0.7
 numpy
 pandas==1.0.3
-typing
+typing==3.7.4.1
 tensorboardX
 scikit-learn
 scipy
