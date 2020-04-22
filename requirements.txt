@@ -12,3 +12,4 @@ scvi
 scanpy
 torch-optimizer
 scgen
+requests
