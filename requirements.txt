@@ -3,7 +3,7 @@ torch
 pytorch-ignite
 dataclasses==0.7
 numpy
-pandas
+pandas==1.0.3
 typing
 tensorboardX
 scikit-learn
