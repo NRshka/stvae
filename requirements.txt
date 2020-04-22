@@ -8,7 +8,7 @@ typing
 tensorboardX==2.0
 scikit-learn
 scipy==1.4.1
-scvi
+scvi==0.6.4
 scanpy
 torch-optimizer
 scgen
