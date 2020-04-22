@@ -9,6 +9,6 @@ scikit-learn
 scipy==1.4.1
 scvi
 scanpy
-torch-optimizer
+torch-optimizer==0.0.1a11
 scgen
 requests
