@@ -2,10 +2,12 @@ from setuptools import setup, find_packages
 from os.path import join, dirname, basename
 
 
+
 def parse_requirements(filename):
     """ load requirements from a pip requirements file """
     lineiter = (line.strip() for line in open(filename))
     return [line for line in lineiter if line and not line.startswith("#")]
+
 
 
 with open('README.rst', 'r') as file:
@@ -16,6 +18,8 @@ with open('requirements.txt', 'r') as req_file:
 
 
 setup_requirements = ["pip>=18.1"]
+requirements =  parse_requirements('requirements.txt')
+
 
 authors = [
     "N. Russkikh",
@@ -47,7 +51,7 @@ setup(
     license = "MIT license",
     packages = find_packages(),
     setup_requires = setup_requirements,
-    install_requires = parse_requirements('./requirements.txt'),
-    version = "0.2.3",
+    install_requires = requirements,
+    version = "0.2.6",
     url = "https://github.com/NRshka/stvae/source",
 )

@@ -10,5 +10,5 @@ scikit-learn
 scipy
 scvi
 scanpy
-ranger
+torch-optimizer
 scgen

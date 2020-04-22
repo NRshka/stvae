@@ -9,7 +9,7 @@ from torch.optim.lr_scheduler import ExponentialLR, CosineAnnealingLR
 from torch.optim import Adam
 
 from .model import RAdam
-from ranger import Ranger
+import torch_optimizer as toptim
 from .model.losses import VariationalLoss, mmd_criterion
 from .data.utils import create_random_classes, add_noise
 
@@ -28,8 +28,8 @@ class VAEUpdater:
         self.model_linear_params = cat([x.view(-1) for x in self.model.parameters()])#for l1/l2 reg
         self.latent_discrim = disc
 
-        self.optimizer = Ranger(self.model.parameters(), lr=cfg.vae_lr, weight_decay=cfg.vae_decay)
-        self.optimizer_discrim = Ranger(self.latent_discrim.parameters(), lr=cfg.disc_lr, weight_decay=cfg.disc_decay)
+        self.optimizer = toptim.Ranger(self.model.parameters(), lr=cfg.vae_lr, weight_decay=cfg.vae_decay)
+        self.optimizer_discrim = toptim.Ranger(self.latent_discrim.parameters(), lr=cfg.disc_lr, weight_decay=cfg.disc_decay)
         self.model_scheduler =  CosineAnnealingLR(self.optimizer, 5) #ExponentialLR(self.optimizer, gamma=cfg.model_scheduler_gamma)
         self.latent_discrim_scheduler = ExponentialLR(self.optimizer_discrim, gamma=cfg.discr_scheduler_gamma)
 
