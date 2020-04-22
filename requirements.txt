@@ -10,5 +10,5 @@ scikit-learn
 scipy
 scvi
 scanpy
-torch-optimizer
+torch-optimizer==0.0.1a11
 scgen
