@@ -27,12 +27,15 @@ The original code containing code with testing several models can be found here_
 
 .. code-block:: python
 
-   ds = stvae.datasets.MouseDataset()
+   ds = stvae.datasets.MouseDataset(download=True) # download data to the current directory
    cfg = stvae.Config()
    train, test, classif = ds.split(0.15, True, 0.15)
    cfg.count_classes = ds.n_labels
    cfg.count_classes = ds.n_batches
    cfg.input_dim = ds.nb_genes
+   cfg.use_cuda = True # if you have a CUDA compatibility gpu
+   cfg.epochs = 600 # number of training epocs
+   cfg.classifier_epochs = 450 # number of epochs for testing classifirs training
    model = stvae.stVAE(cfg)
    model.train(train, None)
    d = model.test(test, classif)
