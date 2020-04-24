@@ -1,6 +1,6 @@
 dataclasses==0.7
 torch
-pytorch-ignite
+pytorch-ignite==0.3.0
 numpy
 pandas==1.0.3
 typing
@@ -9,6 +9,6 @@ scikit-learn
 scipy==1.4.1
 scvi
 scanpy
-torch-optimizer
+torch-optimizer==0.0.1a11
 scgen
 requests
