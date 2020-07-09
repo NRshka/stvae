@@ -3,7 +3,7 @@ torch
 pytorch-ignite==0.3.0
 numpy
 pandas==1.0.3
-typing
+typing==3.7.4.2
 tensorboardX==2.0
 scikit-learn
 scipy==1.4.1
