@@ -10,5 +10,5 @@ scipy==1.4.1
 scvi
 scanpy
 torch-optimizer==0.0.1a11
-scgen
+scgen==1.1.5
 requests
