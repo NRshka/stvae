@@ -1,13 +1,10 @@
 from pathlib import Path
-import sys
 from ignite.engine import Engine, Events
 from ignite.metrics import Metric
 from ignite.contrib.handlers import ProgressBar
 from numpy import inf
 from tensorboardX import SummaryWriter
 import torch
-from collections import defaultdict
-import pdb
 
 from .utils import save_weights, load_datasets
 from .experiment import Experiment
@@ -28,18 +25,19 @@ def init_weights(m):
 
 
 def create_update_class(model, discriminator, config):
-    is_cuda = torch.cuda.is_available()
+    is_cuda = torch.cuda.is_available() and config.use_cuda
     device = None
 
     if is_cuda:
-        device = torch.cuda.device(torch.cuda.current_device())
-        device = None
+        device = torch.device('cuda')
+    else:
+        device = torch.device('cpu')
 
     training_upd = VAEUpdater(model, discriminator, config, device=device,
-                              cuda=torch.cuda.is_available())
+                              cuda=is_cuda)
     validator_upd = Validator(model, discriminator, config.vae_beta,
                               device=device,
-                              cuda=torch.cuda.is_available())
+                              cuda=is_cuda)
 
     return training_upd, validator_upd
 

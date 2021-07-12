@@ -39,11 +39,7 @@ class VAEUpdater:
         self.form_consistency_loss = CrossEntropyLoss()
 
         self.device = device
-        self.cuda = False
-        self.device = torch_device('cpu')
-        if cfg.use_cuda:
-            self.cuda = True
-            self.device = torch_device('cuda')
+        self.cuda = cuda
 
     def __call__(self, engine, batch):
         self.noise_beta = self.noise_beta * self.cfg.decay_beta
@@ -85,14 +81,14 @@ class VAEUpdater:
             b2a_latents = self.model.reparameterize(b2a_mu, b2a_logvar)
             b2a_expression = self.model.decode(b2a_latents, ohe)[0]
             cyclic_loss_on_batch = self.loss_function.reconstruction_loss(b2a_expression, data)
-            
+
             #form consistency loss
             #form_consistency_loss_on_batch = self.form_consistency_loss(b2a_form, ohe.argmax(1))
             #form_consistency_loss_on_batch = self.form_consistency_loss(b2a_form, transfer_classes.argmax(1))
             #form_consistency_loss_on_batch = self.form_consistency_loss(a2b_form, ohe.argmax(1))
             a2a_mu, a2a_logvar, a2a_form = self.model.encode(a2a_expression, ohe)
             a2a_latents = self.model.reparameterize(a2a_mu, a2a_logvar)
-            
+
             form_consistency_loss_on_batch = self.form_consistency_loss(a2b_form, ohe.argmax(1)) + self.form_consistency_loss(b2a_form, transfer_classes.argmax(1)) + MSELoss()(a2a_latents, b2a_latents)
 
             #adversarial part
@@ -161,9 +157,13 @@ class Validator:
         if self.latent_discrim:
             self.latent_discrim.eval()
 
-        val_expression_tensor, val_class_ohe_tensor = _prepare_batch(batch, device=self.device)
+        val_expression_tensor, val_class_ohe_tensor = _prepare_batch(
+            batch,
+            device=self.device
+        )
 
-        recon_val, mu_val, logvar_val = self.model(val_expression_tensor, val_class_ohe_tensor)
+        recon_val, mu_val, logvar_val = self.model(val_expression_tensor,
+                                                   val_class_ohe_tensor)
         mmd_values = None
         if isinstance(recon_val, tuple):
             mmd_values = recon_val[1]
@@ -230,16 +230,15 @@ class trVAEUpdater:
         av_mmd_loss = 0.
         unique_classes = unique(batch_indices)
         count_comb = 0
-        #pdb.set_trace()
+
         for feature1, feature2 in combinations(unique_classes, 2):
-           count_comb += 1
-           x1 = mmd_values[(batch_indices == feature1).reshape((-1,))]
-           x2 = mmd_values[(batch_indices == feature2).reshape((-1,))]
-           min_len = min(x1.shape[0], x2.shape[0])
-           av_mmd_loss += mmd_criterion(x1[:min_len], x2[:min_len], self.cuda,
-                                        mu=self.cfg.kernel_mu, sigma=1e-6).mean()
+            count_comb += 1
+            x1 = mmd_values[(batch_indices == feature1).reshape((-1,))]
+            x2 = mmd_values[(batch_indices == feature2).reshape((-1,))]
+            min_len = min(x1.shape[0], x2.shape[0])
+            av_mmd_loss += mmd_criterion(x1[:min_len], x2[:min_len], self.cuda,
+                                         mu=self.cfg.kernel_mu, sigma=1e-6).mean()
         av_mmd_loss /= count_comb
-        #pdb.set_trace()
 
         loss_on_batch = vae_loss + self.cfg.mmd_weight * av_mmd_loss
 
