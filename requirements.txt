@@ -11,4 +11,4 @@ scvi
 scanpy
 torch-optimizer==0.0.1a11
 scgen
-requests
+requests==2.28.0
